@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+
+@layer components {
+    .btn {
+        @apply text-3xl h-12 w-16 rounded-md bg-amber-50 content-center cursor-pointer hover:bg-gray-300
+    }
+
+    .operator {
+        @apply bg-amber-500 hover:bg-amber-600
+    }
+}
