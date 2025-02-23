@@ -12,8 +12,16 @@ const Calculator = () => {
   const [input, setInput] = useState('');
   const [prev, setPrev] = useState('');
   const [operator, setOperator] = useState('');
-  const [history, setHistory] = useState('');
 
+
+
+  const equalHandler = () => {
+    if (input !== "0") {
+      setInput(calculate())
+      setPrev('')
+      setOperator('');
+    }
+  }
 
   const buttonHandler = (value) => {
     if (value === 'C') {
@@ -21,7 +29,8 @@ const Calculator = () => {
     } 
     else if (value === 'CE') {
       setInput("0");
-      setHistory('');
+      setPrev('');
+  
       setOperator('');
     } 
     else if (value === '%') {
@@ -32,32 +41,47 @@ const Calculator = () => {
 
 
   const operatorHandler = (value) => {
-    let currentInput = input
-    if (!prev) {
-      setHistory(`${input} ${value}`)
-      setPrev(currentInput)
-    } else {
-     setHistory(`${prev} ${value}`)
-   }
+    if(input !== "0") {
+      if (!prev) {setPrev(input)}
 
-   setInput('0');
-   setOperator(value);
-
-   console.log(prev)
-   console.log(operator)
-   console.log(input)
+  
+      setInput("0"); 
+      setOperator(value);
+    }
+   
   };
 
   const calculate = () => {
-    let result = eval(history);
-    setInput(result);
-    setHistory('');
+    let result;
+
+    switch (operator) {
+      case "X":
+        result = parseFloat(prev) * parseFloat(input);
+        break;
+      case "/":
+        if (input === "0") {
+          result = "Cannot divide with 0" 
+          break}
+        else {
+          result = parseFloat(prev) / parseFloat(input);
+          result.toFixed(2);
+          break;
+        }
+      case "+":
+        result = parseFloat(prev) + parseFloat(input);
+        break;
+      case "-":
+        result = parseFloat(prev) - parseFloat(input);
+        break;
+    }
+    
+    if (result !== undefined) {return  result.toString() }
   }
 
 
   return (
-    <main className='flex flex-col items-center w-80 h-3/5 bg-gray-900 rounded-4xl ring-10 ring-gray-900 py-2 px-5 '>
-      <NumBox value={input || "0"} history={history || ""}/>
+    <main className='flex flex-col items-center w-80 h-105 bg-gray-900 rounded-4xl ring-10 ring-gray-900 py-2 px-5 '>
+      <NumBox value={input || "0"} operator={operator || ""}/>
     <div className='flex flex-col gap-3'>
       <div className='flex gap-1'>
         <Button value={'%'} onClick={buttonHandler} />
@@ -86,7 +110,7 @@ const Calculator = () => {
       <div className='flex gap-1'>
           <Button value={'0'} onClick={buttonHandler} />
           <Button value={'.'} onClick={buttonHandler} />
-        <button className='btn bg-blue-700 hover:bg-blue-500 w-1/2 text-4xl' onClick={calculate}>=</button>
+        <button className='btn bg-blue-700 hover:bg-blue-500 w-1/2 text-4xl' onClick={equalHandler}>=</button>
       </div>
     </div>
 </main>
