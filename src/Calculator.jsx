@@ -2,16 +2,13 @@ import React, {useState} from 'react'
 import NumBox from './section/NumBox';
 import Button from  './components/Button';
 import Operator from  './components/Operator';
-
-
-
-
   
 const Calculator = () => {  
   
   const [input, setInput] = useState('');
   const [prev, setPrev] = useState('');
   const [operator, setOperator] = useState('');
+  const [history, setHistory] = useState('false');
 
 
 
@@ -36,19 +33,31 @@ const Calculator = () => {
     else if (value === '%') {
       setInput((parseFloat(input) / 100).toString());
     }
-    else {setInput(input === "0"  ? value : input + value)}
+    else {
+      if (history === "true") {
+        setInput(value)
+        setHistory('false')
+      }else {
+        setInput(input === "0"  ? value : input + value)
+      }
+    }
   };
 
 
   const operatorHandler = (value) => {
     if(input !== "0") {
-      if (!prev) {setPrev(input)}
-
-  
+      if (!prev) {
+      setPrev(input)
+      }
       setInput("0"); 
-      setOperator(value);
     }
-   
+    if(operator && prev) {
+      setInput(calculate())
+      setPrev(calculate())
+    }
+
+    setOperator(value);
+
   };
 
   const calculate = () => {
@@ -75,7 +84,10 @@ const Calculator = () => {
         break;
     }
     
-    if (result !== undefined) {return  result.toString() }
+    if (result !== undefined) {
+      setHistory('true')
+      return  result.toString() 
+    }
   }
 
 
